@@ -1,0 +1,31 @@
+[package]
+name = "tossit-network"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Local-network discovery and encrypted messaging for TossIt"
+
+[dependencies]
+fs2.workspace = true
+getrandom.workspace = true
+hex.workspace = true
+image.workspace = true
+if-addrs.workspace = true
+infer.workspace = true
+mdns-sd.workspace = true
+rustls.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+sha2.workspace = true
+tempfile.workspace = true
+thiserror.workspace = true
+tossit-identity.workspace = true
+tossit-protocol.workspace = true
+tossit-storage.workspace = true
+uuid.workspace = true
+
+[target.'cfg(target_os = "ios")'.dependencies]
+libc.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true

@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="TossIt 是一款无需账号的局域网聊天与传输工具。同一 Wi-Fi 下自动发现设备，文字、图片和文件直接送达。"
+    />
+    <meta name="theme-color" content="#ffffff" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:site_name" content="TossIt" />
+    <meta property="og:title" content="TossIt · 同一 Wi-Fi，直接聊" />
+    <meta
+      property="og:description"
+      content="不用账号，不经过云端。文字、图片和文件直接送到身边的设备。"
+    />
+    <meta property="og:url" content="https://tossit.mlxb.cc/" />
+    <link rel="canonical" href="https://tossit.mlxb.cc/" />
+    <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./styles.css" />
+    <title>TossIt · 同一 Wi-Fi，直接聊</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">跳到主要内容</a>
+
+    <header class="site-header" data-header>
+      <div class="nav-shell">
+        <a class="brand" href="#top" aria-label="TossIt 首页">
+          <span class="brand-mark" aria-hidden="true"><i></i></span>
+          <span>TossIt</span>
+        </a>
+
+        <button
+          class="menu-button"
+          type="button"
+          aria-label="打开导航"
+          aria-expanded="false"
+          aria-controls="site-nav"
+          data-menu-button
+        >
+          <span></span><span></span>
+        </button>
+
+        <nav class="site-nav" id="site-nav" aria-label="主要导航" data-nav>
+          <a href="#features">功能</a>
+          <a href="#how">怎么用</a>
+          <a href="#privacy">传输方式</a>
+          <a href="#progress">开发进度</a>
+        </nav>
+
+        <a class="nav-action" href="#progress">查看进度 <span aria-hidden="true">↗</span></a>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero" id="top">
+        <div class="hero-glow glow-one" aria-hidden="true"></div>
+        <div class="hero-glow glow-two" aria-hidden="true"></div>
+        <div class="hero-shell">
+          <div class="hero-copy" data-reveal>
+            <div class="status-pill">
+              <span class="status-dot"></span>
+              iOS 与 macOS 测试中
+            </div>
+            <h1>同一 Wi-Fi，<br /><em>直接聊。</em></h1>
+            <p class="hero-lead">
+              不用账号，不经过云端。两台设备打开 TossIt，自动发现彼此，文字、图片和文件直接送达。
+            </p>
+            <div class="hero-actions">
+              <a class="button button-primary" href="#how">
+                看看怎么用
+                <span class="button-arrow" aria-hidden="true">→</span>
+              </a>
+              <a class="button button-quiet" href="#privacy">为什么是本地直连</a>
+            </div>
+            <div class="hero-proof" aria-label="产品特点">
+              <span><i class="proof-check">✓</i> 无需注册</span>
+              <span><i class="proof-check">✓</i> TLS 1.3 加密</span>
+              <span><i class="proof-check">✓</i> 最大 512 MB</span>
+            </div>
+          </div>
+
+          <div class="product-stage" data-reveal data-delay="120" aria-label="TossIt 产品界面示意">
+            <div class="local-orbit orbit-outer" aria-hidden="true"></div>
+            <div class="local-orbit orbit-inner" aria-hidden="true"></div>
+            <div class="route-pulse" aria-hidden="true"></div>
+
+            <div class="device-window device-nearby">
+              <div class="window-bar">
+                <span class="window-dot red"></span>
+                <span class="window-dot amber"></span>
+                <span class="window-dot green"></span>
+                <span class="window-title">附近设备</span>
+              </div>
+              <div class="device-body">
+                <div class="mini-brand">
+                  <span class="mini-mark"><i></i></span>
+                  <strong>TossIt</strong>
+                </div>
+                <div class="nearby-title">
+                  <span>同一 WI-FI</span>
+                  <b>正在发现 <i></i></b>
+                </div>
+                <div class="peer-card active">
+                  <span class="peer-signal"><i></i><b></b></span>
+                  <span class="peer-info"><strong>62B9-A133-50BE</strong><small>在线 · 可以开始对话</small></span>
+                  <span class="peer-time">现在</span>
+                </div>
+                <div class="peer-card">
+                  <span class="peer-signal muted"><i></i><b></b></span>
+                  <span class="peer-info"><strong>97A3-0C51-A772</strong><small>不在当前网络</small></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="route-label">
+              <span class="route-icon"><i></i></span>
+              <span><strong>局域网直连</strong><small>TLS 1.3</small></span>
+            </div>
+
+            <div class="device-window device-chat">
+              <div class="chat-head">
+                <span class="chat-avatar"><i></i></span>
+                <span><strong>62B9-A133-50BE</strong><small>当前 Wi-Fi 在线</small></span>
+                <span class="lock-icon" aria-hidden="true"></span>
+              </div>
+              <div class="chat-body">
+                <span class="secure-note">仅在当前局域网传输</span>
+                <div class="message incoming">今晚的路线发你了。</div>
+                <div class="image-message">
+                  <div class="image-sky"><span class="sun"></span><i></i><b></b></div>
+                  <small>周末路线.png</small>
+                </div>
+                <div class="file-message">
+                  <span class="file-sheet">PDF</span>
+                  <span><strong>露营清单.pdf</strong><small>668 KB · 已送达</small></span>
+                  <b aria-hidden="true">›</b>
+                </div>
+              </div>
+              <div class="chat-compose"><span>发一条局域网消息…</span><b>↑</b></div>
+            </div>
+
+            <div class="float-chip chip-image" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M4 5h16v14H4zM8 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm-4 7 5-5 3 3 2-2 6 6" /></svg>
+              图片可预览
+            </div>
+            <div class="float-chip chip-file" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6zM14 3v5h5" /></svg>
+              文件直达
+            </div>
+          </div>
+        </div>
+
+        <div class="signal-strip" data-reveal data-delay="180">
+          <div><strong>0</strong><span>账号</span><small>打开即可使用</small></div>
+          <div><strong>0</strong><span>云端中转</span><small>内容不绕远路</small></div>
+          <div><strong>64<sup>KB</sup></strong><span>分块传输</span><small>大文件不挤爆内存</small></div>
+          <div><strong>512<sup>MB</sup></strong><span>单文件上限</span><small>图片和普通文件</small></div>
+        </div>
+      </section>
+
+      <section class="section features" id="features">
+        <div class="section-shell">
+          <div class="section-heading" data-reveal>
+            <p class="eyebrow">在身边的设备之间</p>
+            <h2>聊天该有的能力，<br />少一点绕路。</h2>
+            <p>保留熟悉的聊天体验，把账号、服务器和复杂设置拿掉。</p>
+          </div>
+
+          <div class="bento-grid">
+            <article class="bento-card bento-discovery" data-reveal>
+              <div class="card-copy">
+                <span class="feature-icon signal-icon" aria-hidden="true"><i></i><b></b></span>
+                <h3>打开就能发现</h3>
+                <p>在同一 Wi-Fi 下自动显示附近设备，不用输入 IP，也不用扫描一串设置。</p>
+              </div>
+              <div class="discovery-visual" aria-hidden="true">
+                <span class="radar-ring ring-a"></span>
+                <span class="radar-ring ring-b"></span>
+                <span class="radar-ring ring-c"></span>
+                <span class="radar-center"><i></i></span>
+                <span class="radar-peer peer-one">A</span>
+                <span class="radar-peer peer-two">B</span>
+              </div>
+            </article>
+
+            <article class="bento-card bento-content" data-reveal data-delay="80">
+              <div class="card-copy">
+                <span class="feature-icon stack-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5 9-5Zm-9 10 9 5 9-5M3 17l9 5 9-5" /></svg>
+                </span>
+                <h3>文字、图片、文件</h3>
+                <p>图片先看缩略图，再点开原图。普通文件显示名称、大小和实时进度。</p>
+              </div>
+              <div class="content-stack" aria-hidden="true">
+                <span class="stack-card stack-text">今晚见</span>
+                <span class="stack-card stack-photo"><i></i><b></b></span>
+                <span class="stack-card stack-file"><b>ZIP</b><i>资料包.zip</i></span>
+              </div>
+            </article>
+
+            <article class="bento-card bento-identity" data-reveal>
+              <div class="card-copy">
+                <span class="feature-icon id-icon" aria-hidden="true">ID</span>
+                <h3>换 Wi-Fi，不换身份</h3>
+                <p>设备 ID 来自本机密钥，不依赖网络地址。回到同一网络，还是原来的设备。</p>
+              </div>
+              <div class="identity-code" aria-hidden="true">
+                <small>DEVICE ID</small>
+                <strong>62B9 · A133 · 50BE</strong>
+                <span><i></i> 本机安全保存</span>
+              </div>
+            </article>
+
+            <article class="bento-card bento-security" data-reveal data-delay="80">
+              <div class="security-route" aria-hidden="true">
+                <span class="route-device">A</span>
+                <span class="route-line"><i></i></span>
+                <span class="route-device">B</span>
+              </div>
+              <div class="card-copy">
+                <span class="feature-icon shield-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M12 3 5 6v5c0 5 3 8 7 10 4-2 7-5 7-10V6l-7-3Zm-3 9 2 2 4-4" /></svg>
+                </span>
+                <h3>确认完整，才算送达</h3>
+                <p>附件经过 SHA-256 完整性校验，接收端成功落盘后才返回“已送达”。</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section how" id="how">
+        <div class="section-shell">
+          <div class="section-heading centered" data-reveal>
+            <p class="eyebrow">三步开始</p>
+            <h2>没有注册流程。</h2>
+            <p>你只需要让两台设备出现在同一个网络里。</p>
+          </div>
+
+          <ol class="steps">
+            <li data-reveal>
+              <span class="step-number">01</span>
+              <div class="step-visual wifi-visual" aria-hidden="true">
+                <i></i><b></b><em></em>
+              </div>
+              <h3>连接同一 Wi-Fi</h3>
+              <p>家庭、办公室或手机热点都可以。</p>
+            </li>
+            <li data-reveal data-delay="80">
+              <span class="step-number">02</span>
+              <div class="step-visual open-visual" aria-hidden="true">
+                <span class="app-tile"><i></i></span>
+                <span class="app-tile second"><i></i></span>
+              </div>
+              <h3>两边打开 TossIt</h3>
+              <p>附近设备会自动出现在列表里。</p>
+            </li>
+            <li data-reveal data-delay="160">
+              <span class="step-number">03</span>
+              <div class="step-visual send-visual" aria-hidden="true">
+                <span>照片</span><i></i><b>✓</b>
+              </div>
+              <h3>选中设备，直接发送</h3>
+              <p>文字、图片和文件走局域网直达。</p>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="section privacy" id="privacy">
+        <div class="section-shell privacy-shell">
+          <div class="privacy-copy" data-reveal>
+            <p class="eyebrow">一条看得懂的路线</p>
+            <h2>你的内容，<br />不必先去远方。</h2>
+            <p>
+              TossIt 在当前局域网里建立加密连接。网络只是临时路线，设备身份不会因为换了 Wi-Fi 而改变。
+            </p>
+            <ul class="plain-list">
+              <li><span>✓</span> TLS 1.3 加密直连</li>
+              <li><span>✓</span> 设备身份与 IP 地址分开</li>
+              <li><span>✓</span> 不承诺离线送达，不偷偷上传云端</li>
+            </ul>
+          </div>
+
+          <div class="route-map" data-reveal data-delay="100" aria-label="设备通过当前 Wi-Fi 直接连接的示意图">
+            <div class="map-device map-left">
+              <span class="map-avatar"><i></i></span>
+              <strong>你的设备</strong>
+              <small>62B9-A133-50BE</small>
+            </div>
+            <div class="map-path path-left"><i></i></div>
+            <div class="map-router">
+              <span class="router-waves"><i></i><b></b><em></em></span>
+              <strong>当前 Wi-Fi</strong>
+              <small>只负责把路连起来</small>
+            </div>
+            <div class="map-path path-right"><i></i></div>
+            <div class="map-device map-right">
+              <span class="map-avatar violet"><i></i></span>
+              <strong>对方设备</strong>
+              <small>97A3-0C51-A772</small>
+            </div>
+            <div class="cloud-no">
+              <span class="cloud-shape">云端</span>
+              <i></i>
+              <small>不经过这里</small>
+            </div>
+            <span class="map-badge">端到端路线 · 在线时直达</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section progress" id="progress">
+        <div class="section-shell">
+          <div class="progress-panel" data-reveal>
+            <div class="progress-copy">
+              <p class="eyebrow">开发进度</p>
+              <h2>核心能力已经跑通，<br />正在做真机验收。</h2>
+              <p>
+                当前版本已经完成设备身份、同网发现、加密文字消息、图片预览和文件传输。下一步是更多真机互传、聊天记录持久化和传输中断处理。
+              </p>
+              <span class="progress-updated"><i></i> 最近更新 · 2026 年 8 月</span>
+            </div>
+            <div class="progress-list" role="list" aria-label="平台进度">
+              <div class="platform-row" role="listitem">
+                <span class="platform-icon apple" aria-hidden="true">●</span>
+                <span><strong>iOS</strong><small>签名测试包已构建</small></span>
+                <b class="state testing">真机测试</b>
+              </div>
+              <div class="platform-row" role="listitem">
+                <span class="platform-icon mac" aria-hidden="true">⌘</span>
+                <span><strong>macOS</strong><small>应用构建与局域网验证通过</small></span>
+                <b class="state ready">可测试</b>
+              </div>
+              <div class="platform-row" role="listitem">
+                <span class="platform-icon other" aria-hidden="true">A</span>
+                <span><strong>Android</strong><small>项目已生成，等待平台验收</small></span>
+                <b class="state planned">后续</b>
+              </div>
+              <div class="platform-row" role="listitem">
+                <span class="platform-icon other" aria-hidden="true">▦</span>
+                <span><strong>Windows</strong><small>等待 Windows 主机验证</small></span>
+                <b class="state planned">后续</b>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="closing">
+        <div class="closing-shell" data-reveal>
+          <span class="closing-orbit" aria-hidden="true"><i></i><b></b><em></em></span>
+          <p class="eyebrow">TossIt</p>
+          <h2>设备就在旁边，<br />消息也该走近路。</h2>
+          <a class="button button-light" href="#top">回到顶部 <span aria-hidden="true">↑</span></a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-shell">
+        <a class="brand footer-brand" href="#top">
+          <span class="brand-mark" aria-hidden="true"><i></i></span>
+          <span>TossIt</span>
+        </a>
+        <p>无需账号的局域网聊天与传输工具。</p>
+        <nav aria-label="页脚导航">
+          <a href="#features">功能</a>
+          <a href="#privacy">传输方式</a>
+          <a href="#progress">开发进度</a>
+        </nav>
+        <small>© 2026 TossIt. Built for nearby devices.</small>
+      </div>
+    </footer>
+
+    <script src="./app.js" defer></script>
+  </body>
+</html>

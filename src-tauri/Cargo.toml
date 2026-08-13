@@ -1,9 +1,10 @@
 [package]
 name = "tossit"
-version = "0.1.0"
+version.workspace = true
 description = "A lightweight, account-free local-network messenger"
 authors = ["ALVIN-YANG"]
-edition = "2021"
+edition.workspace = true
+license.workspace = true
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -18,7 +19,32 @@ crate-type = ["staticlib", "cdylib", "rlib"]
 tauri-build = { version = "2", features = [] }
 
 [dependencies]
-tauri = { version = "2", features = [] }
+tauri = { version = "2", features = ["protocol-asset"] }
+tauri-plugin-dialog = "2.7.2"
+tauri-plugin-fs = "2.5.1"
 tauri-plugin-opener = "2"
-serde = { version = "1", features = ["derive"] }
-serde_json = "1"
+serde.workspace = true
+serde_json.workspace = true
+image.workspace = true
+sha2.workspace = true
+hex.workspace = true
+tossit-core.workspace = true
+tossit-identity.workspace = true
+tossit-network.workspace = true
+tossit-storage.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true
+
+[target.'cfg(any(target_os = "ios", target_os = "macos"))'.dependencies]
+if-addrs.workspace = true
+objc2 = "0.6.4"
+objc2-core-location = { version = "0.3.2", default-features = false, features = ["CLLocationManager", "std"] }
+objc2-foundation = { version = "0.3.2", default-features = false, features = ["NSString", "std"] }
+
+[target.'cfg(target_os = "ios")'.dependencies]
+block2 = "0.6.2"
+objc2-network-extension = { version = "0.3.2", default-features = false, features = ["block2", "std"] }
+
+[target.'cfg(target_os = "macos")'.dependencies]
+objc2-core-wlan = { version = "0.3.2", default-features = false, features = ["CWInterface", "CWWiFiClient", "std"] }

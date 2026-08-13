@@ -1,0 +1,502 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		089BE6BE6397C2929FE2789D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C987136C10BFF37CC167AA6 /* CoreGraphics.framework */; };
+		192CAAB413685077BA87E6D5 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5193B83FD2E1A133C37F0F29 /* CoreLocation.framework */; };
+		1C97DAD7BA29E444F4CEC7DF /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 202E34CB5FB7DBC65E088855 /* MetalKit.framework */; };
+		28720E5AE156A41EB7DDEF3C /* libapp.a in Resources */ = {isa = PBXBuildFile; fileRef = 65CD1104A3BB171D8BB009AA /* libapp.a */; };
+		2B53D20A101B38A666F79D5E /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C57CBB395DFEFFF94DE9BA40 /* QuartzCore.framework */; };
+		3411403B59C60757164B4376 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A0DA6C3DEE5F9EB7B4AEB98A /* Metal.framework */; };
+		34B08455FA4A63495DB8C4B0 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B24EC2922F5316AF0BDB0935 /* NetworkExtension.framework */; };
+		366001A9CEBA8DA87EA9FC74 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9F9AC7E0EDE4B755B51C045 /* UIKit.framework */; };
+		4036595A66BA7DD9C52510A7 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 186B0349B1CE6858BEC096A7 /* Security.framework */; };
+		45C7DF4B51C0EDF3621EEC12 /* libapp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AC6CA8AAEB38E52D3E5546B /* libapp.a */; };
+		8303AE94D42127DE29F38582 /* assets in Resources */ = {isa = PBXBuildFile; fileRef = FBBF4C907FE565353B33E98F /* assets */; };
+		AF07EFC73E3B39DE0E8B041B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BC42F987B8EBEDA08863E979 /* LaunchScreen.storyboard */; };
+		B19A594C44226F8B1602813A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 32A27852865B9F51C12F66F0 /* Assets.xcassets */; };
+		DC1C2A05B0075073E37B5FC5 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 642B6DD1AF72D79614DECD67 /* WebKit.framework */; };
+		F26B1DCF729BDEF587FB1E4F /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = BDABDFBD09F9F1EB18A828FA /* main.mm */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		186B0349B1CE6858BEC096A7 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		1D271B9F0AC886DEB21E7DF5 /* tossit_iOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = tossit_iOS.entitlements; sourceTree = "<group>"; };
+		202E34CB5FB7DBC65E088855 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
+		32A27852865B9F51C12F66F0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		5193B83FD2E1A133C37F0F29 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		52B89EF57B5F0503B99144B4 /* main.rs */ = {isa = PBXFileReference; path = main.rs; sourceTree = "<group>"; };
+		642B6DD1AF72D79614DECD67 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		64BA5A991B9B020AB3B1AFA8 /* bindings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bindings.h; sourceTree = "<group>"; };
+		65CD1104A3BB171D8BB009AA /* libapp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libapp.a; sourceTree = "<group>"; };
+		6AC6CA8AAEB38E52D3E5546B /* libapp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libapp.a; sourceTree = "<group>"; };
+		8C92F40B09CC969F56076043 /* lib.rs */ = {isa = PBXFileReference; path = lib.rs; sourceTree = "<group>"; };
+		9C987136C10BFF37CC167AA6 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		A0DA6C3DEE5F9EB7B4AEB98A /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
+		B24EC2922F5316AF0BDB0935 /* NetworkExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NetworkExtension.framework; path = System/Library/Frameworks/NetworkExtension.framework; sourceTree = SDKROOT; };
+		BC42F987B8EBEDA08863E979 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		BDABDFBD09F9F1EB18A828FA /* main.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
+		C57CBB395DFEFFF94DE9BA40 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		C6FD3AFC3D7F38F3118FF648 /* apple_connectivity.rs */ = {isa = PBXFileReference; path = apple_connectivity.rs; sourceTree = "<group>"; };
+		C9F9AC7E0EDE4B755B51C045 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		D3054EDC43C78F62D8BBB06E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		D4C411236068108D046E5C9F /* tossit_iOS.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = tossit_iOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FBBF4C907FE565353B33E98F /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = assets; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F5AB7478AEED2BCF2A47C94B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				45C7DF4B51C0EDF3621EEC12 /* libapp.a in Frameworks */,
+				089BE6BE6397C2929FE2789D /* CoreGraphics.framework in Frameworks */,
+				3411403B59C60757164B4376 /* Metal.framework in Frameworks */,
+				1C97DAD7BA29E444F4CEC7DF /* MetalKit.framework in Frameworks */,
+				2B53D20A101B38A666F79D5E /* QuartzCore.framework in Frameworks */,
+				4036595A66BA7DD9C52510A7 /* Security.framework in Frameworks */,
+				192CAAB413685077BA87E6D5 /* CoreLocation.framework in Frameworks */,
+				34B08455FA4A63495DB8C4B0 /* NetworkExtension.framework in Frameworks */,
+				366001A9CEBA8DA87EA9FC74 /* UIKit.framework in Frameworks */,
+				DC1C2A05B0075073E37B5FC5 /* WebKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2F928D4616E86AD6D95BFAC3 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				6C63B9463D16ED3674305A8F /* tossit */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		455AC0DC6BEE2E99977DF884 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				9C987136C10BFF37CC167AA6 /* CoreGraphics.framework */,
+				5193B83FD2E1A133C37F0F29 /* CoreLocation.framework */,
+				6AC6CA8AAEB38E52D3E5546B /* libapp.a */,
+				A0DA6C3DEE5F9EB7B4AEB98A /* Metal.framework */,
+				202E34CB5FB7DBC65E088855 /* MetalKit.framework */,
+				B24EC2922F5316AF0BDB0935 /* NetworkExtension.framework */,
+				C57CBB395DFEFFF94DE9BA40 /* QuartzCore.framework */,
+				186B0349B1CE6858BEC096A7 /* Security.framework */,
+				C9F9AC7E0EDE4B755B51C045 /* UIKit.framework */,
+				642B6DD1AF72D79614DECD67 /* WebKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		6C63B9463D16ED3674305A8F /* tossit */ = {
+			isa = PBXGroup;
+			children = (
+				BDABDFBD09F9F1EB18A828FA /* main.mm */,
+				E27EA3667927A7892936A224 /* bindings */,
+			);
+			path = tossit;
+			sourceTree = "<group>";
+		};
+		78DBD520947AE1F51714434F /* debug */ = {
+			isa = PBXGroup;
+			children = (
+				65CD1104A3BB171D8BB009AA /* libapp.a */,
+			);
+			path = debug;
+			sourceTree = "<group>";
+		};
+		8BD77490067873ED3393F0B5 /* arm64 */ = {
+			isa = PBXGroup;
+			children = (
+				78DBD520947AE1F51714434F /* debug */,
+			);
+			path = arm64;
+			sourceTree = "<group>";
+		};
+		9FE6B28FE36251A845A90ADD /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D4C411236068108D046E5C9F /* tossit_iOS.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		ADAAFB09C9A4AD42D2746F18 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				C6FD3AFC3D7F38F3118FF648 /* apple_connectivity.rs */,
+				8C92F40B09CC969F56076043 /* lib.rs */,
+				52B89EF57B5F0503B99144B4 /* main.rs */,
+			);
+			name = src;
+			path = ../../src;
+			sourceTree = "<group>";
+		};
+		B9D6CD02CBA81009F45318B2 = {
+			isa = PBXGroup;
+			children = (
+				FBBF4C907FE565353B33E98F /* assets */,
+				32A27852865B9F51C12F66F0 /* Assets.xcassets */,
+				BC42F987B8EBEDA08863E979 /* LaunchScreen.storyboard */,
+				E4F939919BDF0087F7ABA6B3 /* Externals */,
+				2F928D4616E86AD6D95BFAC3 /* Sources */,
+				ADAAFB09C9A4AD42D2746F18 /* src */,
+				BAFC7B913E9C8DCA5A6995D9 /* tossit_iOS */,
+				455AC0DC6BEE2E99977DF884 /* Frameworks */,
+				9FE6B28FE36251A845A90ADD /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		BAFC7B913E9C8DCA5A6995D9 /* tossit_iOS */ = {
+			isa = PBXGroup;
+			children = (
+				D3054EDC43C78F62D8BBB06E /* Info.plist */,
+				1D271B9F0AC886DEB21E7DF5 /* tossit_iOS.entitlements */,
+			);
+			path = tossit_iOS;
+			sourceTree = "<group>";
+		};
+		E27EA3667927A7892936A224 /* bindings */ = {
+			isa = PBXGroup;
+			children = (
+				64BA5A991B9B020AB3B1AFA8 /* bindings.h */,
+			);
+			path = bindings;
+			sourceTree = "<group>";
+		};
+		E4F939919BDF0087F7ABA6B3 /* Externals */ = {
+			isa = PBXGroup;
+			children = (
+				8BD77490067873ED3393F0B5 /* arm64 */,
+			);
+			path = Externals;
+			sourceTree = "<group>";
+		};
+		"TEMP_A5380851-75F4-48CE-83C1-C814FB1C84CB" /* x86_64 */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = x86_64;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		7B57120F3323398E91A9B3B2 /* tossit_iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F615873FEFD778477731D02E /* Build configuration list for PBXNativeTarget "tossit_iOS" */;
+			buildPhases = (
+				117B5A113F273E33F729ADFB /* Build Rust Code */,
+				81021748240D8B33049D34FD /* Sources */,
+				F977AB2D35F0898896FB4844 /* Resources */,
+				F5AB7478AEED2BCF2A47C94B /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = tossit_iOS;
+			packageProductDependencies = (
+			);
+			productName = tossit_iOS;
+			productReference = D4C411236068108D046E5C9F /* tossit_iOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		04E428994E73C0D61425D4C8 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					7B57120F3323398E91A9B3B2 = {
+						DevelopmentTeam = SPXQYPSCZ5;
+					};
+				};
+			};
+			buildConfigurationList = 8A9175657C17E8D735B6C50E /* Build configuration list for PBXProject "tossit" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = B9D6CD02CBA81009F45318B2;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 9FE6B28FE36251A845A90ADD /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				7B57120F3323398E91A9B3B2 /* tossit_iOS */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F977AB2D35F0898896FB4844 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B19A594C44226F8B1602813A /* Assets.xcassets in Resources */,
+				AF07EFC73E3B39DE0E8B041B /* LaunchScreen.storyboard in Resources */,
+				8303AE94D42127DE29F38582 /* assets in Resources */,
+				28720E5AE156A41EB7DDEF3C /* libapp.a in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		117B5A113F273E33F729ADFB /* Build Rust Code */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Build Rust Code";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(SRCROOT)/Externals/x86_64/${CONFIGURATION}/libapp.a",
+				"$(SRCROOT)/Externals/arm64/${CONFIGURATION}/libapp.a",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export PATH=\"$HOME/Library/pnpm:$HOME/.cargo/bin:/opt/homebrew/bin:/usr/local/bin:$PATH\"\npnpm tauri ios xcode-script -v --platform ${PLATFORM_DISPLAY_NAME:?} --sdk-root ${SDKROOT:?} --framework-search-paths \"${FRAMEWORK_SEARCH_PATHS:?}\" --header-search-paths \"${HEADER_SEARCH_PATHS:?}\" --gcc-preprocessor-definitions \"${GCC_PREPROCESSOR_DEFINITIONS:-}\" --configuration ${CONFIGURATION:?} ${FORCE_COLOR} ${ARCHS:?}\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		81021748240D8B33049D34FD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F26B1DCF729BDEF587FB1E4F /* main.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		4086FC32DDF6067AD6D9847B /* debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = debug;
+		};
+		ADDD6247E3EABC6B62CB99F9 /* release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ARCHS = (
+					arm64,
+				);
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = tossit_iOS/tossit_iOS.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = "SPXQYPSCZ5";
+				ENABLE_BITCODE = NO;
+				"EXCLUDED_ARCHS[sdk=iphoneos*]" = x86_64;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\".\"",
+				);
+				INFOPLIST_FILE = tossit_iOS/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				"LIBRARY_SEARCH_PATHS[arch=arm64]" = "$(inherited) $(PROJECT_DIR)/Externals/arm64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/$(PLATFORM_NAME) $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-5.0/$(PLATFORM_NAME)";
+				"LIBRARY_SEARCH_PATHS[arch=x86_64]" = "$(inherited) $(PROJECT_DIR)/Externals/x86_64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/$(PLATFORM_NAME) $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-5.0/$(PLATFORM_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = cc.mlxb.tossit;
+				PRODUCT_NAME = "TossIt";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = arm64;
+			};
+			name = release;
+		};
+		B8C50F3816A0694936C809AF /* debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ARCHS = (
+					arm64,
+				);
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = tossit_iOS/tossit_iOS.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = "SPXQYPSCZ5";
+				ENABLE_BITCODE = NO;
+				"EXCLUDED_ARCHS[sdk=iphoneos*]" = x86_64;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\".\"",
+				);
+				INFOPLIST_FILE = tossit_iOS/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				"LIBRARY_SEARCH_PATHS[arch=arm64]" = "$(inherited) $(PROJECT_DIR)/Externals/arm64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/$(PLATFORM_NAME) $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-5.0/$(PLATFORM_NAME)";
+				"LIBRARY_SEARCH_PATHS[arch=x86_64]" = "$(inherited) $(PROJECT_DIR)/Externals/x86_64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/$(PLATFORM_NAME) $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-5.0/$(PLATFORM_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = cc.mlxb.tossit;
+				PRODUCT_NAME = "TossIt";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = arm64;
+			};
+			name = debug;
+		};
+		C5C193FBAA7E3FF782746AD2 /* release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		8A9175657C17E8D735B6C50E /* Build configuration list for PBXProject "tossit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4086FC32DDF6067AD6D9847B /* debug */,
+				C5C193FBAA7E3FF782746AD2 /* release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = debug;
+		};
+		F615873FEFD778477731D02E /* Build configuration list for PBXNativeTarget "tossit_iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B8C50F3816A0694936C809AF /* debug */,
+				ADDD6247E3EABC6B62CB99F9 /* release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 04E428994E73C0D61425D4C8 /* Project object */;
+}

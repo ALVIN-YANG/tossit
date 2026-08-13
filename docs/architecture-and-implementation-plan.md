@@ -1,13 +1,13 @@
 # TossIt Architecture and Implementation Plan
 
-Status: Architecture baseline v0.1
+Status: iPhone and Mac MVP implemented; final physical-device acceptance and Mac notarization remain pending
 
-Last updated: 2026-08-11
+Last updated: 2026-08-14
 
 ## 1. Product intent
 
-TossIt is a lightweight local-network messenger for iOS, Android, macOS, and
-Windows. People on the same LAN can discover each other and exchange text,
+TossIt is a lightweight local-network messenger for iPhone and Mac. People on
+the same LAN can discover each other and exchange text,
 images, and arbitrary files without creating an account or depending on a cloud
 service. The product should feel like a restrained, modern LAN-only messenger
 rather than a file-transfer utility with chat bolted on.
@@ -18,8 +18,14 @@ Core product characteristics:
 - A persistent cryptographic device identity survives restarts and IP changes.
 - Automatic discovery on ordinary Wi-Fi and Ethernet networks.
 - Direct encrypted peer-to-peer communication.
-- Private conversations and group conversations.
+- Private conversations. Groups are deferred.
 - Local conversation history and transfer records.
+- A Wi-Fi-scoped conversation space is created only after the first successful
+  send or receive; merely connecting to a network does not create history.
+- Cellular, offline, and denied-permission states keep historical spaces readable
+  while disabling new LAN sends.
+- Bluetooth may later provide a one-off nearby transfer tool, but does not
+  create contacts, conversations, or a second messaging identity.
 - A compact, modern interface with mobile and desktop layouts.
 - AI roles and message analysis are a possible later extension, not part of the
   initial product.
@@ -39,7 +45,7 @@ logic if the mobile WebView proves unsuitable.
 | Mobile integration | Narrow Swift and Kotlin Tauri plugins | Use native APIs for permissions, discovery, sharing, and lifecycle only |
 | Discovery | mDNS/DNS-SD with manual IP and QR fallback | Multicast is convenient but cannot be assumed to work on every LAN |
 | Transport | Direct TCP with TLS 1.3 | Broad LAN compatibility and standard authenticated encryption |
-| Identity | Persistent local keypair; device ID derived from the public key | Stable identity without an account or fixed IP address |
+| Identity | Persistent local keypair; Peer ID derived from the public key | Stable identity without an account or fixed IP address |
 | Storage | SQLite owned by the Rust core | Durable local history with predictable migrations |
 | File transfer | Streaming binary chunks with bounded buffers | Large files must not pass through or accumulate in the WebView |
 | Group delivery | Direct fan-out to online members in the first release | Avoid introducing a hidden coordinator or cloud relay |
@@ -47,6 +53,16 @@ logic if the mobile WebView proves unsuitable.
 The frontend may invoke commands and receive small state or progress events, but
 it must never receive entire file payloads. Tauri is an adapter around the core,
 not the domain model.
+
+Wi-Fi and Bluetooth are transport endpoints, never identity boundaries. Trusted
+devices are global to the installation and remain keyed by the full public-key
+fingerprint. Private message history is intentionally scoped by both network
+space and Peer ID, so the same two devices have separate histories on different
+Wi-Fi networks without receiving new identities. A network space is persisted
+only after one text, image, or file succeeds in either direction. The current
+Wi-Fi may exist transiently before that; cellular, offline, and unidentified
+network states expose history but no send path. Bluetooth is reserved for a
+later one-off transfer surface and is not a chat transport.
 
 ## 3. System architecture
 
@@ -81,7 +97,8 @@ TossIt/
 ├── crates/
 │   ├── tossit-core/             # Application services and session state
 │   ├── tossit-protocol/         # Versioned messages and compatibility fixtures
-│   ├── tossit-identity/         # Key lifecycle, device ID, and trust state
+│   ├── tossit-identity/         # Key lifecycle, Peer ID, and TLS material
+│   ├── tossit-network/          # LAN discovery, encrypted transport, and live messages
 │   ├── tossit-storage/          # SQLite repositories and migrations
 │   └── tossit-transfer/         # Bounded streaming, checksums, resume state
 ├── plugins/
@@ -100,9 +117,8 @@ storage, and transfer modules as those behaviors become real.
 ## 4. Identity and trust model
 
 1. On first launch, the Rust core generates a device keypair.
-2. The private key is stored using the platform secure store where practical.
-   The spike may use an owner-only application data file until secure-store
-   integration is validated.
+2. On Apple platforms, the private key is stored in Keychain. Existing
+   owner-only identity files are migrated once without changing the Peer ID.
 3. A short displayable device ID is derived from the full public-key fingerprint.
 4. Discovery advertises an alias, protocol version, port, capabilities, and the
    public identity fingerprint. It never advertises a private secret.
@@ -135,12 +151,15 @@ The UI must distinguish these states:
 - Known but currently offline.
 - Discovered but not trusted.
 - Network permission denied.
+- Cellular or offline with historical network spaces still available.
+- Current Wi-Fi visible but not yet persisted because no transfer has succeeded.
 - Multicast unavailable or blocked by AP/client isolation.
 - Firewall blocked or connection refused.
 
-Connections use explicit deadlines and reconnect with bounded exponential
-backoff. A persistent identity does not mean holding a permanent socket forever;
-sessions may reconnect whenever the OS or network changes.
+Connections use explicit deadlines. Pending sends retry while the peer is
+reachable, and failed sends can be retried manually. A persistent identity does
+not mean holding a permanent socket forever; sessions reconnect whenever the OS
+or network changes.
 
 ## 6. Messaging model
 
@@ -148,8 +167,9 @@ Every application message has:
 
 - Protocol version.
 - Globally unique message ID.
+- Network space ID.
 - Conversation ID.
-- Sender device ID.
+- Sender Peer ID.
 - Sender monotonic sequence within that conversation.
 - Creation timestamp.
 - Payload type and payload metadata.
@@ -186,14 +206,13 @@ the encrypted transport. The WebView sees only metadata and progress.
 Required properties:
 
 - Bounded memory independent of total file size.
-- Explicit receiver acceptance unless the sender is trusted and auto-accept is
-  enabled.
+- Automatic receiver acceptance only for mutually trusted devices.
 - Temporary `.part` files followed by an atomic rename after verification.
 - Content length limits, free-space checks, filename sanitization, and collision
   handling.
 - BLAKE3 or SHA-256 integrity verification.
 - Cancellation without leaving an apparently complete file.
-- Resume support designed into metadata, but implemented after basic streaming.
+- Interrupted transfers retry from the beginning; byte-range resume is deferred.
 - Image previews generated as bounded thumbnails rather than full-resolution IPC
   payloads.
 
@@ -230,6 +249,8 @@ service. That limitation is imposed by mobile operating systems, not Tauri.
 - Logs exclude message bodies, private keys, and complete filesystem paths by
   default.
 - Dependencies are pinned by lockfiles and updated deliberately.
+- The WebView uses a restricted Content Security Policy and a narrow local-asset
+  scope.
 - Threat modeling and protocol fuzzing are required before public release.
 
 ## 11. Implementation plan
@@ -273,13 +294,14 @@ Exit evidence:
 If Tauri mobile blocks this milestone, retain the Rust core and replace only the
 mobile UI shell with SwiftUI/Kotlin.
 
-### Phase 2 — Private conversations
+### Phase 2 — Private conversations (implemented)
 
 Deliverables:
 
 - Trusted-peer pairing and verification code.
 - SQLite schema and migrations.
 - Conversation list, text composer, message status, and unread state.
+- Explicit Wi-Fi network spaces with cellular/offline history fallback.
 - Deduplication, reconnect, retry, and bounded history queries.
 
 Exit evidence:
@@ -288,7 +310,11 @@ Exit evidence:
 - Duplicate or delayed frames do not duplicate visible messages.
 - Denied trust and changed identity are handled safely.
 
-### Phase 3 — Images and files
+### Phase 3 — Images and files (implemented for the iPhone/Mac MVP)
+
+The current implementation includes native picking, 64 KiB streaming, SHA-256
+verification, progress, cancellation, manual retry, free-space checks, local
+cleanup, and bounded image previews. Interrupted transfers retry from byte zero.
 
 Deliverables:
 
@@ -406,7 +432,53 @@ The following shipped projects informed the architecture without defining it:
 
 ## 15. Current repository state
 
-At this baseline commit, the repository contains the Tauri/Svelte scaffold and
-this architecture plan. The Rust networking core, identity model, discovery,
-encrypted transport, persistence, file transfer, and product UI remain planned
-work. Completion claims must be tied to the exit evidence in each phase above.
+Phase 0 now includes the Tauri/Svelte application shell, a root Rust workspace,
+the initial `tossit-core` and `tossit-protocol` crates, a typed application
+status command, protocol validation tests, and unified local verification
+commands. Tauri target projects have also been generated for iOS and Android on
+the available local SDKs.
+
+Phase 1 now includes `tossit-identity` and `tossit-network`. The identity crate
+creates an Ed25519 key from operating-system secure randomness, persists the
+secret atomically in an owner-only application data file, derives a full Peer ID
+and short Display ID, and exposes only the public summary to the frontend. It
+also derives stable TLS certificate material from the same identity key. The
+identity survives a desktop process restart. Secure-store integration remains a
+later hardening step, as allowed by the Phase 1 spike boundary.
+
+The network crate advertises and browses `_tossit._tcp.local.` with mDNS and
+supports an authenticated manual `IP:port` connection when multicast discovery
+is unavailable. It connects directly with TLS 1.3, pins the authenticated
+certificate fingerprint, and performs a signed challenge handshake before
+accepting a message. Text messages use deterministic network-and-peer
+conversation IDs and receive an explicit
+acknowledgement before the sender shows `delivered`. A verification code derived
+from both persistent identities is shown on each device, and both users must
+confirm it before either side accepts messages. Trusted peers, used network
+spaces, messages, delivery state, attachment metadata, and unread state are
+stored in SQLite and restored after restart. Existing databases migrate prior
+messages into one `以前的局域网` space. A two-node test exercises the encrypted send and acknowledgement
+path; the live mDNS test remains an environment-dependent acceptance check.
+
+The iOS target includes the development team used for local signing and an
+explicit local-network privacy description for the `_tossit._tcp` Bonjour
+service. The iOS and macOS adapters read only the current Wi-Fi, request location
+access from an explicit user action, and clear the active send path when the
+device moves to cellular or offline. A development-signed IPA and an iOS
+Simulator launch have been verified. Physical-device installation is verified
+separately from permission, first-launch trust, and functional network behavior.
+
+The Android target builds an arm64 debug APK and AAB with the same Rust network,
+identity, and SQLite storage crates. Package generation is verified separately
+from installation, local-network permissions, and physical-device exchange.
+
+The responsive UI uses a macOS three-column network/conversation/chat layout and
+an iOS single-column drill-down. Current, historical, cellular, and offline
+states; network-scoped unread badges; trust flow; composer; attachment preview;
+and delivery status are connected to Tauri commands. Manual endpoint connection,
+including the local address display, is available only in the current network.
+Bounded
+reconnect/retry, physical iOS/Android exchange, Windows-host
+exchange, transfer cancellation, and cross-platform file-transfer acceptance
+remain unverified or planned work.
+Completion claims must stay tied to the exit evidence in each phase above.

@@ -1,0 +1,21 @@
+[package]
+name = "tossit-identity"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Persistent cryptographic device identity for TossIt"
+
+[dependencies]
+ed25519-dalek.workspace = true
+getrandom.workspace = true
+hex.workspace = true
+rcgen.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+sha2.workspace = true
+tempfile.workspace = true
+thiserror.workspace = true
+
+[target.'cfg(any(target_os = "ios", target_os = "macos"))'.dependencies]
+security-framework.workspace = true
+security-framework-sys.workspace = true

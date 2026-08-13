@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "TossIt",
-  "version": "0.1.0",
-  "identifier": "com.tossit.app",
+  "version": "0.2.0",
+  "identifier": "cc.mlxb.tossit",
   "build": {
     "beforeDevCommand": "pnpm dev",
     "devUrl": "http://localhost:1420",
@@ -13,14 +13,28 @@
     "windows": [
       {
         "title": "TossIt",
-        "width": 1080,
-        "height": 720,
-        "minWidth": 800,
-        "minHeight": 560
+        "width": 820,
+        "height": 640,
+        "center": true,
+        "minWidth": 640,
+        "minHeight": 520
       }
     ],
     "security": {
-      "csp": null
+      "csp": {
+        "default-src": "'self' customprotocol: asset:",
+        "connect-src": "ipc: http://ipc.localhost",
+        "img-src": "'self' asset: http://asset.localhost data: blob:",
+        "style-src": "'self' 'unsafe-inline'"
+      },
+      "assetProtocol": {
+        "enable": true,
+        "scope": [
+          "$APPDATA/attachments/**/*",
+          "$APPDATA/avatars/**/*",
+          "$APPCACHE/tossit-selected/**/*"
+        ]
+      }
     }
   },
   "bundle": {
@@ -32,6 +46,14 @@
       "icons/128x128@2x.png",
       "icons/icon.icns",
       "icons/icon.ico"
-    ]
+    ],
+    "macOS": {
+      "infoPlist": "Info.macos.plist",
+      "signingIdentity": "-"
+    },
+    "iOS": {
+      "developmentTeam": "SPXQYPSCZ5",
+      "infoPlist": "Info.ios.plist"
+    }
   }
 }

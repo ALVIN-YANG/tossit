@@ -1,0 +1,42 @@
+[workspace]
+resolver = "2"
+members = [
+  "crates/tossit-core",
+  "crates/tossit-identity",
+  "crates/tossit-network",
+  "crates/tossit-protocol",
+  "crates/tossit-storage",
+  "src-tauri",
+]
+
+[workspace.package]
+version = "0.2.0"
+edition = "2021"
+license = "MIT"
+
+[workspace.dependencies]
+ed25519-dalek = { version = "3", features = ["alloc", "pkcs8", "signature"] }
+fs2 = "0.4"
+getrandom = { version = "0.3", features = ["std"] }
+hex = "0.4"
+image = { version = "0.25", default-features = false, features = ["bmp", "gif", "jpeg", "png", "webp"] }
+if-addrs = "0.15"
+infer = "0.19"
+libc = "0.2"
+mdns-sd = { version = "0.20.3", default-features = false }
+rcgen = { version = "0.14.9", default-features = false, features = ["crypto", "ring"] }
+rusqlite = { version = "0.40.2", features = ["bundled"] }
+rustls = { version = "0.23.35", default-features = false, features = ["ring", "std"] }
+security-framework = "3.7"
+security-framework-sys = "2.17"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"
+tempfile = "3"
+thiserror = "2"
+tossit-core = { path = "crates/tossit-core" }
+tossit-identity = { path = "crates/tossit-identity" }
+tossit-network = { path = "crates/tossit-network" }
+tossit-protocol = { path = "crates/tossit-protocol" }
+tossit-storage = { path = "crates/tossit-storage" }
+uuid = { version = "1", features = ["v4"] }
