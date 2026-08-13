@@ -515,6 +515,11 @@ impl NetworkNode {
             .clone()
     }
 
+    #[cfg(target_os = "ios")]
+    pub fn refresh_discovery(&self) -> Result<(), NetworkError> {
+        self.runtime.bonjour.refresh_registration()
+    }
+
     pub fn set_nickname(&self, value: &str) -> Result<(), NetworkError> {
         let nickname = normalize_nickname(value, &self.runtime.shared.identity_summary.display_id);
         let current = self.nickname();

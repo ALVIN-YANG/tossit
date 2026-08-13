@@ -303,7 +303,7 @@ async fn retry_message(
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    tauri::Builder::default()
+    let app = tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_opener::init())
@@ -360,6 +360,23 @@ pub fn run() {
             cancel_message,
             retry_message
         ])
-        .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+        .build(tauri::generate_context!())
+        .expect("error while building tauri application");
+
+    app.run(|_app_handle, _event| {
+        #[cfg(target_os = "ios")]
+        if matches!(
+            _event,
+            tauri::RunEvent::WindowEvent {
+                event: tauri::WindowEvent::Resumed,
+                ..
+            }
+        ) {
+            if let Some(network) = _app_handle.try_state::<NetworkNode>() {
+                if let Err(error) = network.refresh_discovery() {
+                    eprintln!("failed to refresh Bonjour registration: {error}");
+                }
+            }
+        }
+    });
 }

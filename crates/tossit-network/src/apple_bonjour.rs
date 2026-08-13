@@ -157,6 +157,23 @@ impl SystemBonjour {
             }
         }
     }
+
+    pub(super) fn refresh_registration(&self) -> Result<(), NetworkError> {
+        let nickname = self.shared.nickname.read().expect("nickname lock").clone();
+        let avatar_hash = self
+            .shared
+            .avatar
+            .read()
+            .expect("avatar lock")
+            .as_ref()
+            .map(|avatar| avatar.hash.clone());
+        self.replace_registration(
+            &nickname,
+            avatar_hash.as_deref(),
+            &nickname,
+            avatar_hash.as_deref(),
+        )
+    }
 }
 
 impl Drop for SystemBonjour {
