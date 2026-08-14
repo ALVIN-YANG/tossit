@@ -290,6 +290,18 @@ fn cancel_message(
 }
 
 #[tauri::command]
+async fn delete_message(
+    network: tauri::State<'_, NetworkNode>,
+    message_id: String,
+) -> Result<NetworkSnapshot, String> {
+    let network = network.inner().clone();
+    tauri::async_runtime::spawn_blocking(move || network.delete_message(&message_id))
+        .await
+        .map_err(|error| error.to_string())?
+        .map_err(|error| error.to_string())
+}
+
+#[tauri::command]
 async fn retry_message(
     network: tauri::State<'_, NetworkNode>,
     message_id: String,
@@ -358,6 +370,7 @@ pub fn run() {
             send_text,
             send_attachment,
             cancel_message,
+            delete_message,
             retry_message
         ])
         .build(tauri::generate_context!())

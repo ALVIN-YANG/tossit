@@ -278,6 +278,11 @@ impl Store {
         rows.collect::<Result<Vec<_>, _>>().map_err(Into::into)
     }
 
+    pub fn delete_message(&self, message_id: &str) -> Result<bool, StorageError> {
+        let connection = self.connection.lock().expect("storage connection lock");
+        Ok(connection.execute("DELETE FROM messages WHERE message_id = ?1", [message_id])? == 1)
+    }
+
     pub fn load_conversation_messages_before(
         &self,
         network_id: &str,
@@ -541,6 +546,33 @@ mod tests {
             .mark_peer_read(&peer.peer_id, &message.network_id)
             .expect("mark read");
         assert!(store.load_recent_messages(100).expect("reload")[0].is_read);
+    }
+
+    #[test]
+    fn deleted_message_does_not_return_after_reload() {
+        let store = Store::open_in_memory().expect("open store");
+        let peer = peer();
+        store.remember_peer(&peer).expect("remember peer");
+        let message = StoredMessage {
+            message_id: "message-to-delete".to_owned(),
+            network_id: "network-1".to_owned(),
+            conversation_id: "conversation-1".to_owned(),
+            peer_id: peer.peer_id,
+            direction: "incoming".to_owned(),
+            delivery: "received".to_owned(),
+            content_json: r#"{"type":"text","text":"remove me"}"#.to_owned(),
+            created_at_unix_ms: 100,
+            is_read: true,
+        };
+        store.save_message(&message).expect("save message");
+
+        assert!(store
+            .delete_message(&message.message_id)
+            .expect("delete message"));
+        assert!(!store
+            .delete_message(&message.message_id)
+            .expect("delete missing message"));
+        assert!(store.load_recent_messages(100).expect("reload").is_empty());
     }
 
     #[test]

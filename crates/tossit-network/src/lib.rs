@@ -1207,6 +1207,63 @@ impl NetworkNode {
         Ok(self.snapshot())
     }
 
+    pub fn delete_message(&self, message_id: &str) -> Result<NetworkSnapshot, NetworkError> {
+        let message = {
+            let mut state = self
+                .runtime
+                .shared
+                .state
+                .write()
+                .expect("network state lock");
+            let index = state
+                .messages
+                .iter()
+                .position(|message| message.message_id == message_id)
+                .ok_or_else(|| NetworkError::InvalidWire("消息不存在或已删除".to_owned()))?;
+            let message = state.messages.remove(index);
+            if message.direction == MessageDirection::Outgoing
+                && message.delivery == DeliveryState::Sending
+            {
+                self.runtime
+                    .shared
+                    .cancelled_deliveries
+                    .lock()
+                    .expect("cancelled deliveries lock")
+                    .insert(message_id.to_owned());
+            }
+            message
+        };
+
+        if !self.runtime.shared.store.delete_message(message_id)? {
+            self.runtime
+                .shared
+                .state
+                .write()
+                .expect("network state lock")
+                .messages
+                .push(message);
+            return Err(NetworkError::InvalidWire("消息不存在或已删除".to_owned()));
+        }
+        self.runtime
+            .shared
+            .delivery_retry_after
+            .lock()
+            .expect("delivery retry lock")
+            .remove(message_id);
+        let in_flight = self
+            .runtime
+            .shared
+            .delivery_in_flight
+            .lock()
+            .expect("delivery in-flight lock")
+            .contains(message_id);
+        if !in_flight {
+            clear_delivery_cancelled(&self.runtime.shared, message_id);
+        }
+        remove_message_files(&self.runtime.shared, &message);
+        Ok(self.snapshot())
+    }
+
     pub fn retry_message(&self, message_id: &str) -> Result<ChatMessage, NetworkError> {
         let active_network = current_network(&self.runtime.shared)?;
         let (message, peer) = {
@@ -1507,8 +1564,10 @@ fn complete_outgoing_attempt(
     result: Result<(), NetworkError>,
 ) -> Result<ChatMessage, NetworkError> {
     if take_delivery_cancelled(shared, &message.message_id) {
-        return update_outgoing_delivery(shared, &message.message_id, DeliveryState::Failed)?
-            .ok_or_else(|| NetworkError::InvalidWire("outgoing message disappeared".to_owned()));
+        return Ok(
+            update_outgoing_delivery(shared, &message.message_id, DeliveryState::Failed)?
+                .unwrap_or(message),
+        );
     }
     match result {
         Ok(()) => {
@@ -2821,6 +2880,33 @@ fn remove_managed_file(path: &Path, managed_directory: &Path) -> Result<(), Netw
     }
 }
 
+fn remove_message_files(shared: &Shared, message: &ChatMessage) {
+    let ChatContent::Attachment { attachment } = &message.content else {
+        return;
+    };
+    let managed_directories = [
+        shared.attachment_dir.join("incoming"),
+        shared.attachment_dir.join("outgoing"),
+        shared.attachment_dir.join("previews"),
+    ];
+    let paths = [
+        attachment.local_path.as_deref(),
+        attachment.preview_path.as_deref(),
+    ]
+    .into_iter()
+    .flatten()
+    .map(PathBuf::from)
+    .collect::<HashSet<_>>();
+
+    for path in paths {
+        for directory in &managed_directories {
+            if let Err(error) = remove_managed_file(&path, directory) {
+                eprintln!("TossIt could not remove deleted attachment: {error}");
+            }
+        }
+    }
+}
+
 fn generate_thumbnail(shared: &Shared, source: &Path) -> Result<PathBuf, NetworkError> {
     let mut reader = image::ImageReader::open(source)
         .and_then(|reader| reader.with_guessed_format())
@@ -3601,6 +3687,72 @@ mod tests {
             panic!("expected attachment history");
         };
         assert!(attachment.local_path.is_none());
+    }
+
+    #[test]
+    fn deleting_attachment_removes_only_the_local_copy_and_history() {
+        let directory = tempfile::tempdir().expect("create temp directory");
+        let first = start_node(&directory, "delete-first");
+        let second = start_node(&directory, "delete-second");
+        let (_first_peer, second_peer) = pair_direct(&first, &second);
+        let source = directory.path().join("delete.txt");
+        fs::write(&source, b"delete fixture").expect("write fixture");
+
+        let sent = first
+            .send_attachment(
+                &second_peer.peer_id,
+                &source,
+                AttachmentKind::File,
+                Some("delete.txt"),
+            )
+            .expect("send fixture");
+        let outgoing_path = match &first.snapshot().messages[0].content {
+            ChatContent::Attachment { attachment } => PathBuf::from(
+                attachment
+                    .local_path
+                    .as_deref()
+                    .expect("outgoing file path"),
+            ),
+            ChatContent::Text { .. } => panic!("expected outgoing attachment"),
+        };
+        let incoming = second.snapshot().messages[0].clone();
+        let incoming_path = match &incoming.content {
+            ChatContent::Attachment { attachment } => PathBuf::from(
+                attachment
+                    .local_path
+                    .as_deref()
+                    .expect("incoming file path"),
+            ),
+            ChatContent::Text { .. } => panic!("expected incoming attachment"),
+        };
+
+        second
+            .delete_message(&incoming.message_id)
+            .expect("delete received message");
+        assert!(second.snapshot().messages.is_empty());
+        assert!(!incoming_path.exists());
+        assert_eq!(first.snapshot().messages.len(), 1);
+        assert!(outgoing_path.is_file());
+
+        first
+            .delete_message(&sent.message_id)
+            .expect("delete sent message");
+        assert!(first.snapshot().messages.is_empty());
+        assert!(!outgoing_path.exists());
+        assert!(first
+            .runtime
+            .shared
+            .store
+            .load_all_messages()
+            .expect("reload first history")
+            .is_empty());
+        assert!(second
+            .runtime
+            .shared
+            .store
+            .load_all_messages()
+            .expect("reload second history")
+            .is_empty());
     }
 
     #[test]

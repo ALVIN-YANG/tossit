@@ -96,6 +96,12 @@
     receivedBytes: number;
   };
 
+  type MessageMenu = {
+    messageId: string;
+    x: number;
+    y: number;
+  };
+
   let identity = $state<DeviceIdentity | null>(null);
   let network = $state<NetworkSnapshot>({
     listeningPort: 0,
@@ -137,6 +143,11 @@
   let storageSummary = $state<StorageSummary | null>(null);
   let clearingStorage = $state(false);
   let messageScrollElement = $state<HTMLDivElement | null>(null);
+  let messageMenu = $state<MessageMenu | null>(null);
+  let deletingMessage = $state(false);
+  let messageLongPressTimer: number | null = null;
+  let messageLongPressStart: { pointerId: number; messageId: string; x: number; y: number } | null = null;
+  let messageLongPressTriggered = "";
   const syncingAvatars = new Set<string>();
   const avatarRetryAfter = new Map<string, number>();
 
@@ -867,9 +878,86 @@
     }
   }
 
+  function showMessageMenu(messageId: string, x: number, y: number) {
+    messageMenu = { messageId, x, y };
+  }
+
+  function openMessageMenu(event: MouseEvent, messageId: string) {
+    event.preventDefault();
+    event.stopPropagation();
+    showMessageMenu(messageId, event.clientX, event.clientY);
+  }
+
+  function clearMessageLongPress() {
+    if (messageLongPressTimer !== null) window.clearTimeout(messageLongPressTimer);
+    messageLongPressTimer = null;
+    messageLongPressStart = null;
+  }
+
+  function beginMessageLongPress(event: PointerEvent, messageId: string) {
+    if (event.pointerType !== "touch") return;
+    clearMessageLongPress();
+    messageLongPressTriggered = "";
+    messageLongPressStart = {
+      pointerId: event.pointerId,
+      messageId,
+      x: event.clientX,
+      y: event.clientY,
+    };
+    messageLongPressTimer = window.setTimeout(() => {
+      const press = messageLongPressStart;
+      if (!press || press.pointerId !== event.pointerId) return;
+      messageLongPressTriggered = press.messageId;
+      showMessageMenu(press.messageId, press.x, press.y);
+      messageLongPressTimer = null;
+      messageLongPressStart = null;
+    }, 520);
+  }
+
+  function moveMessageLongPress(event: PointerEvent) {
+    const press = messageLongPressStart;
+    if (!press || press.pointerId !== event.pointerId) return;
+    if (Math.hypot(event.clientX - press.x, event.clientY - press.y) > 10) {
+      clearMessageLongPress();
+    }
+  }
+
+  function endMessageLongPress(event: PointerEvent, messageId: string) {
+    clearMessageLongPress();
+    if (messageLongPressTriggered !== messageId) return;
+    event.preventDefault();
+    window.setTimeout(() => {
+      if (messageLongPressTriggered === messageId) messageLongPressTriggered = "";
+    }, 0);
+  }
+
+  async function deleteSelectedMessage() {
+    const selected = messageMenu;
+    if (!selected || deletingMessage) return;
+    deletingMessage = true;
+    sendError = "";
+    try {
+      if (previewMode) {
+        network = {
+          ...network,
+          messages: network.messages.filter((message) => message.messageId !== selected.messageId),
+        };
+      } else {
+        network = await invoke<NetworkSnapshot>("delete_message", { messageId: selected.messageId });
+      }
+      messageMenu = null;
+    } catch (error) {
+      sendError = error instanceof Error ? error.message : String(error);
+      await refreshNetwork().catch(() => undefined);
+    } finally {
+      deletingMessage = false;
+    }
+  }
+
   function handleWindowKeydown(event: KeyboardEvent) {
     if (event.key === "Escape") {
       activeImage = null;
+      messageMenu = null;
       nicknameEditorOpen = false;
     }
   }
@@ -1215,7 +1303,15 @@
           {/if}
           <div class="message-list">
             {#each messagesFor(peer.peerId) as message (message.messageId)}
-              <article class:outgoing={message.direction === "outgoing"} class="message-row">
+              <article
+                class:outgoing={message.direction === "outgoing"}
+                class="message-row"
+                oncontextmenu={(event) => openMessageMenu(event, message.messageId)}
+                onpointerdown={(event) => beginMessageLongPress(event, message.messageId)}
+                onpointermove={moveMessageLongPress}
+                onpointerup={(event) => endMessageLongPress(event, message.messageId)}
+                onpointercancel={clearMessageLongPress}
+              >
                 <div class:attachment-bubble={message.content.type === "attachment"} class="bubble">
                   {#if message.content.type === "text"}
                     <p>{message.content.text}</p>
@@ -1226,7 +1322,11 @@
                         class="image-card"
                         type="button"
                         disabled={!attachment.localPath}
-                        onclick={() => attachment.localPath && (activeImage = attachment)}
+                        onclick={() => {
+                          if (messageLongPressTriggered !== message.messageId && attachment.localPath) {
+                            activeImage = attachment;
+                          }
+                        }}
                         aria-label={`预览图片 ${attachment.fileName}`}
                       >
                         {#if attachment.previewPath || attachment.localPath}
@@ -1380,21 +1480,38 @@
   </div>
 {/if}
 
+{#if messageMenu}
+  <div
+    class="message-menu-overlay"
+    role="presentation"
+    onclick={(event) => event.currentTarget === event.target && !deletingMessage && (messageMenu = null)}
+  >
+    <div
+      class="message-menu"
+      role="menu"
+      style={`--message-menu-x: ${messageMenu.x}px; --message-menu-y: ${messageMenu.y}px;`}
+    >
+      <button type="button" role="menuitem" disabled={deletingMessage} onclick={deleteSelectedMessage}>
+        {deletingMessage ? "删除中" : "删除"}
+      </button>
+    </div>
+  </div>
+{/if}
+
 {#if activeImage}
   <div
     class="image-viewer"
-    role="presentation"
+    role="dialog"
+    aria-modal="true"
+    aria-label={`图片预览 ${activeImage.fileName}`}
+    tabindex="-1"
     onclick={(event) => event.currentTarget === event.target && (activeImage = null)}
+    onkeydown={(event) => event.key === "Escape" && (activeImage = null)}
   >
-    <div class="image-viewer-panel" role="dialog" aria-modal="true" aria-label={`图片预览 ${activeImage.fileName}`}>
-      <header>
-        <span>{activeImage.fileName}</span>
-        <button type="button" onclick={() => (activeImage = null)} aria-label="关闭图片预览">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg>
-        </button>
-      </header>
-      <img src={assetUrl(activeImage.localPath)} alt={activeImage.fileName} />
-    </div>
+    <button class="image-viewer-close" type="button" onclick={() => (activeImage = null)} aria-label="关闭图片预览">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg>
+    </button>
+    <img src={assetUrl(activeImage.localPath)} alt={activeImage.fileName} />
   </div>
 {/if}
 
@@ -2659,11 +2776,50 @@
     position: fixed;
     z-index: 20;
     inset: 0;
-    padding: 24px;
+    padding: max(64px, calc(env(safe-area-inset-top) + 52px)) 24px max(24px, env(safe-area-inset-bottom));
     display: grid;
     place-items: center;
     background: rgba(15, 21, 35, 0.82);
     backdrop-filter: blur(12px);
+  }
+
+  .message-menu-overlay {
+    position: fixed;
+    z-index: 40;
+    inset: 0;
+    background: transparent;
+  }
+
+  .message-menu {
+    position: fixed;
+    left: clamp(12px, var(--message-menu-x), calc(100vw - 108px));
+    top: clamp(12px, var(--message-menu-y), calc(100dvh - 56px));
+    width: 96px;
+    padding: 5px;
+    border: 1px solid #dfe4ed;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow: 0 12px 34px rgba(28, 39, 63, 0.2);
+  }
+
+  .message-menu button {
+    width: 100%;
+    min-height: 36px;
+    border: 0;
+    border-radius: 7px;
+    background: transparent;
+    color: #d33b4d;
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .message-menu button:hover {
+    background: #fff0f2;
+  }
+
+  .message-menu button:disabled {
+    opacity: 0.55;
+    cursor: default;
   }
 
   .profile-overlay {
@@ -2862,50 +3018,22 @@
     opacity: 0.5;
   }
 
-  .image-viewer-panel {
-    width: min(1080px, 100%);
-    height: min(820px, 100%);
-    display: grid;
-    grid-template-rows: auto minmax(0, 1fr);
-    overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    border-radius: 16px;
-    background: #111827;
-    box-shadow: 0 28px 80px rgba(0, 0, 0, 0.42);
-  }
-
-  .image-viewer-panel header {
-    min-width: 0;
-    height: 52px;
-    padding: 0 10px 0 16px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    color: #fff;
-  }
-
-  .image-viewer-panel header span {
-    min-width: 0;
-    flex: 1;
-    overflow: hidden;
-    font-size: 0.78rem;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .image-viewer-panel header button {
+  .image-viewer-close {
+    position: absolute;
+    top: max(14px, env(safe-area-inset-top));
+    right: max(14px, env(safe-area-inset-right));
     width: 36px;
     height: 36px;
     display: grid;
     place-items: center;
-    border: 0;
-    border-radius: 9px;
-    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 18px;
+    background: rgba(20, 26, 40, 0.72);
     color: #fff;
     cursor: pointer;
   }
 
-  .image-viewer-panel header svg {
+  .image-viewer-close svg {
     width: 19px;
     fill: none;
     stroke: currentColor;
@@ -2913,11 +3041,14 @@
     stroke-width: 1.8;
   }
 
-  .image-viewer-panel > img {
-    width: 100%;
-    height: 100%;
-    min-height: 0;
-    object-fit: contain;
+  .image-viewer > img {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: calc(100dvh - 96px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    border-radius: 10px;
+    box-shadow: 0 24px 72px rgba(0, 0, 0, 0.35);
   }
 
   @keyframes pulse {
@@ -3096,14 +3227,32 @@
     }
 
     .image-viewer {
-      padding: 0;
+      padding: max(64px, calc(env(safe-area-inset-top) + 52px)) 10px max(12px, env(safe-area-inset-bottom));
     }
 
-    .image-viewer-panel {
+    .image-viewer > img {
+      border-radius: 6px;
+    }
+
+    .message-menu-overlay {
+      padding: 0 10px max(10px, env(safe-area-inset-bottom));
+      display: flex;
+      align-items: flex-end;
+      background: rgba(15, 21, 35, 0.16);
+    }
+
+    .message-menu {
+      position: static;
       width: 100%;
-      height: 100%;
+      padding: 6px;
       border: 0;
-      border-radius: 0;
+      border-radius: 14px;
+      box-shadow: 0 12px 36px rgba(28, 39, 63, 0.2);
+    }
+
+    .message-menu button {
+      min-height: 48px;
+      font-size: 0.92rem;
     }
 
     .composer small {
